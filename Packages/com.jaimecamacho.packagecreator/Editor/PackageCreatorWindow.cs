@@ -62,7 +62,7 @@ public class PackageCreatorWindow : EditorWindow
         Directory.CreateDirectory(runtimePath);
         Directory.CreateDirectory(editorPath);
 
-        // Crear ASMDEFs
+        // Crear ASMDEFs para Runtime y Editor
         File.WriteAllText(Path.Combine(runtimePath, $"com.jaimecamacho.{projectId}.Runtime.asmdef"),
             $"{{\n  \"name\": \"com.jaimecamacho.{projectId}.Runtime\"\n}}");
 
