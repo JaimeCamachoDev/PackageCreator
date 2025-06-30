@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "com.jaimecamacho.bubbles": {
+    "com.jaimecamacho.packagecreator": {
       "version": "file:com.jaimecamacho.packagecreator",
       "depth": 0,
       "source": "embedded",
