@@ -1,13 +1,13 @@
 {
   "author": "Jaime Camacho",
-  "displayName": "holi",
+  "displayName": "__PROJECT_NAME__",
   "keywords": [
     "unity"
   ],
   "license": "MIT",
-  "name": "com.jaimecamacho.holi",
+  "name": "com.jaimecamacho.__projectid__",
   "unity": "6000.0",
   "unityRelease": "0f1",
   "version": "1.0.0",
-  "description": "Creador de Packages"
+  "description": "__DESCRIPTION__"
 }
