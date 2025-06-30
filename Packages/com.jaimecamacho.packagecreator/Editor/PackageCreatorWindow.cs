@@ -33,7 +33,6 @@ public class PackageCreatorWindow : EditorWindow
 
     private void CreatePackage()
     {
-        // Obtener nombre real del proyecto desde la ruta raíz
         string projectPath = Directory.GetParent(Application.dataPath).FullName;
         string projectName = Path.GetFileName(projectPath);
         string projectId = Regex.Replace(projectName.ToLower(), @"[^a-z0-9]", "");
@@ -56,8 +55,21 @@ public class PackageCreatorWindow : EditorWindow
 
         Directory.CreateDirectory(basePath);
         File.WriteAllText(Path.Combine(basePath, "package.json"), finalJson);
-        AssetDatabase.Refresh();
 
+        // Crear carpetas Runtime y Editor
+        string runtimePath = Path.Combine(basePath, "Runtime");
+        string editorPath = Path.Combine(basePath, "Editor");
+        Directory.CreateDirectory(runtimePath);
+        Directory.CreateDirectory(editorPath);
+
+        // Crear ASMDEFs
+        File.WriteAllText(Path.Combine(runtimePath, $"com.jaimecamacho.{projectId}.Runtime.asmdef"),
+            $"{{\n  \"name\": \"com.jaimecamacho.{projectId}.Runtime\"\n}}");
+
+        File.WriteAllText(Path.Combine(editorPath, $"com.jaimecamacho.{projectId}.Editor.asmdef"),
+            $"{{\n  \"name\": \"com.jaimecamacho.{projectId}.Editor\",\n  \"references\": [\"com.jaimecamacho.{projectId}.Runtime\"],\n  \"includePlatforms\": [\"Editor\"]\n}}");
+
+        AssetDatabase.Refresh();
         Debug.Log($"✅ Paquete creado correctamente en: {basePath}");
     }
 
