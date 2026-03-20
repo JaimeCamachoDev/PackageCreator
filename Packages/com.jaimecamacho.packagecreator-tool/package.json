@@ -1,0 +1,14 @@
+{
+  "author": "JaimeCamachoDEV",
+  "displayName": "Package Creator Tool",
+  "keywords": [
+    "unity",
+    "upm"
+  ],
+  "license": "MIT",
+  "name": "com.jaimecamacho.packagecreator-tool",
+  "unity": "6000.0",
+  "unityRelease": "0f1",
+  "version": "1.0.3",
+  "description": "package creator for other projects"
+}

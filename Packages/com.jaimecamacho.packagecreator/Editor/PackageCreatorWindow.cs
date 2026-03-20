@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 
 public class PackageCreatorWindow : EditorWindow
@@ -110,7 +111,9 @@ public class PackageCreatorWindow : EditorWindow
             var packageName = $"{companyPrefix}.{normalizedId}";
             if (string.Equals(packageName, CreatorPackageName, StringComparison.OrdinalIgnoreCase))
             {
-                throw new InvalidOperationException("The generated package name collides with the Package Creator package.");
+                throw new InvalidOperationException(
+                    "The generated package name collides with the Package Creator package. " +
+                    "Use a different Package Id, for example 'mytool', 'core', 'notes-runtime' or another project-specific name.");
             }
 
             var packagePath = Path.Combine("Packages", packageName);
@@ -143,7 +146,7 @@ public class PackageCreatorWindow : EditorWindow
             }
 
             AssetDatabase.Refresh();
-            EditorUtility.DisplayDialog("Package Creator", $"Package created successfully at {packagePath}", "OK");
+            ShowNextSteps(packagePath);
         }
         catch (Exception exception)
         {
@@ -187,6 +190,41 @@ public class PackageCreatorWindow : EditorWindow
     private void WriteTemplate(string templateName, string outputPath, string packageName, string normalizedId)
     {
         File.WriteAllText(outputPath, GetTemplateContent(templateName, packageName, normalizedId));
+    }
+
+    private void ShowNextSteps(string packagePath)
+    {
+        var openFiles = EditorUtility.DisplayDialogComplex(
+            "Package Created",
+            $"Package created successfully at {packagePath}\n\nNext step:\n1. Review README.md\n2. Review CHANGELOG.md\n3. Add your runtime/editor code\n4. Run the release scripts when you want to publish",
+            "Open README + CHANGELOG",
+            "Close",
+            "Show Package Folder");
+
+        switch (openFiles)
+        {
+            case 0:
+                OpenFileIfExists("README.md");
+                OpenFileIfExists("CHANGELOG.md");
+                Selection.activeObject = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(packagePath);
+                EditorGUIUtility.PingObject(Selection.activeObject);
+                PackageReleaseManagerWindow.OpenWindowForPackage(Path.GetFileName(packagePath));
+                break;
+            case 2:
+                Selection.activeObject = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(packagePath);
+                EditorGUIUtility.PingObject(Selection.activeObject);
+                PackageReleaseManagerWindow.OpenWindowForPackage(Path.GetFileName(packagePath));
+                break;
+        }
+    }
+
+    private static void OpenFileIfExists(string assetPath)
+    {
+        var fullPath = Path.GetFullPath(assetPath);
+        if (File.Exists(fullPath))
+        {
+            InternalEditorUtility.OpenFileAtLineExternal(fullPath, 1);
+        }
     }
 
     private string GetTemplateContent(string templateName, string packageName, string normalizedId)

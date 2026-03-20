@@ -1,0 +1,37 @@
+param(
+    [string]$Version,
+    [string]$OutputDirectory = "ReleaseArtifacts",
+    [string]$PackagePath = "Packages/com.jaimecamacho.packagecreator-tool",
+    [switch]$LoginIfNeeded
+)
+
+$ErrorActionPreference = "Stop"
+
+if ([string]::IsNullOrWhiteSpace($Version))
+{
+    $Version = Read-Host "Version to publish"
+}
+
+$package = Get-Content -Raw -Path (Join-Path $PackagePath "package.json") | ConvertFrom-Json
+$tarballPath = Join-Path $OutputDirectory "$($package.name)-$Version.tgz"
+
+& npm.cmd whoami --registry=https://registry.npmjs.org/ 2>$null | Out-Null
+if ($LASTEXITCODE -ne 0)
+{
+    if (!$LoginIfNeeded)
+    {
+        throw "npm is not authenticated. Run npm login first or rerun with -LoginIfNeeded."
+    }
+
+    & npm.cmd login --registry=https://registry.npmjs.org/
+    if ($LASTEXITCODE -ne 0)
+    {
+        throw "npm login failed."
+    }
+}
+
+& powershell -ExecutionPolicy Bypass -File ".\scripts\Publish-UpmPackage.ps1" -TarballPath $tarballPath
+if ($LASTEXITCODE -ne 0)
+{
+    throw "Publish-UpmPackage.ps1 failed with exit code $LASTEXITCODE"
+}
