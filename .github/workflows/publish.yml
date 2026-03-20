@@ -1,49 +1,61 @@
-name: Publish to npmjs
+name: Validate UPM Package
 
 on:
-  release:
-    types: [created]
+  pull_request:
+    paths:
+      - "Packages/com.jaimecamacho.packagecreator/**"
+      - ".github/workflows/publish.yml"
+      - "README.md"
+  push:
+    branches:
+      - main
+    paths:
+      - "Packages/com.jaimecamacho.packagecreator/**"
+      - ".github/workflows/publish.yml"
+      - "README.md"
+  workflow_dispatch:
 
 permissions:
-  contents: write  # Requerido para poder hacer commit
+  contents: read
 
 jobs:
-  publish:
+  validate:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v6
         with:
-          node-version: 18
-          registry-url: 'https://registry.npmjs.org/'
+          node-version: 24
 
-      - name: Set package path
+      - name: Validate package metadata
+        shell: pwsh
         run: |
-          repo_name=${GITHUB_REPOSITORY##*/}
-          repo_lower=$(echo "$repo_name" | tr '[:upper:]' '[:lower:]')
-          echo "PACKAGE_DIR=Packages/com.jaimecamacho.$repo_lower" >> $GITHUB_ENV
+          $packagePath = "Packages/com.jaimecamacho.packagecreator"
+          $packageJsonPath = Join-Path $packagePath "package.json"
+          if (!(Test-Path $packageJsonPath)) {
+            throw "Missing package.json at $packageJsonPath"
+          }
 
-      - name: Extract version from tag
-        id: version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+          $package = Get-Content -Raw -Path $packageJsonPath | ConvertFrom-Json
 
-      - name: Update version in package.json
-        run: |
-          jq --arg v "$VERSION" '.version = $v' "$PACKAGE_DIR/package.json" > tmp.json && mv tmp.json "$PACKAGE_DIR/package.json"
+          if ([string]::IsNullOrWhiteSpace($package.name)) {
+            throw "package.json is missing 'name'."
+          }
 
-      # Paso de commit y push eliminado
+          if ($package.name -notmatch '^com\.[a-z0-9\-]+(\.[a-z0-9\-]+)+$') {
+            throw "Package name '$($package.name)' is not a valid Unity reverse-domain package name."
+          }
 
-      - name: Sync README into package
-        run: |
-          mkdir -p "$PACKAGE_DIR"
-          cp README.md "$PACKAGE_DIR/README.md"
+          if ([string]::IsNullOrWhiteSpace($package.version)) {
+            throw "package.json is missing 'version'."
+          }
 
-      - name: Publish package to npm
-        run: npm publish
-        working-directory: ${{ env.PACKAGE_DIR }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_PACKAGE }}
+          if ($package.version -notmatch '^\d+\.\d+\.\d+(-[0-9A-Za-z\.-]+)?$') {
+            throw "Package version '$($package.version)' is not valid semver."
+          }
+
+          Write-Host "Package metadata validation passed for $($package.name) $($package.version)"

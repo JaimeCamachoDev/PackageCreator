@@ -9,5 +9,5 @@
   "unity": "6000.0",
   "unityRelease": "0f1",
   "version": "1.0.0",
-  "description": "Descripcion"
+  "description": "Unity UPM package scaffold and release workflow generator."
 }

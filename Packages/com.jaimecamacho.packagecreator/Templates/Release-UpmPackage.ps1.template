@@ -1,0 +1,71 @@
+param(
+    [string]$Version,
+    [string]$UnityPath = "",
+    [string]$PackagePath = "__PACKAGE_PATH__",
+    [string]$OutputDirectory = "ReleaseArtifacts",
+    [string[]]$ChangelogNotes,
+    [switch]$ManualSign,
+    [switch]$SkipPrepare,
+    [switch]$SkipSign,
+    [switch]$SkipPublish
+)
+
+$ErrorActionPreference = "Stop"
+
+if ([string]::IsNullOrWhiteSpace($Version))
+{
+    $Version = Read-Host "Version to release"
+}
+
+if (!$SkipPrepare)
+{
+    & powershell -ExecutionPolicy Bypass -File ".\scripts\Prepare-UpmRelease.ps1" -Version $Version -PackagePath $PackagePath -CreateChangelogEntry -ChangelogNotes $ChangelogNotes
+    if ($LASTEXITCODE -ne 0)
+    {
+        throw "Prepare-UpmRelease.ps1 failed with exit code $LASTEXITCODE"
+    }
+}
+
+$package = Get-Content -Raw -Path (Join-Path $PackagePath "package.json") | ConvertFrom-Json
+$tarballPath = Join-Path $OutputDirectory "$($package.name)-$Version.tgz"
+
+if (!$SkipSign)
+{
+    if ($ManualSign)
+    {
+        New-Item -ItemType Directory -Path $OutputDirectory -Force | Out-Null
+        Write-Host "Manual signing required."
+        Write-Host "Export the signed tarball to: $tarballPath"
+        Start-Process explorer.exe (Resolve-Path $OutputDirectory).Path | Out-Null
+        Read-Host "Press ENTER after exporting" | Out-Null
+    }
+    else
+    {
+        if ([string]::IsNullOrWhiteSpace($UnityPath))
+        {
+            throw "UnityPath is required unless -ManualSign is used."
+        }
+
+        & powershell -ExecutionPolicy Bypass -File ".\scripts\Sign-UpmPackage.ps1" -UnityPath $UnityPath -PackagePath $PackagePath -OutputDirectory $OutputDirectory
+        if ($LASTEXITCODE -ne 0)
+        {
+            throw "Sign-UpmPackage.ps1 failed with exit code $LASTEXITCODE"
+        }
+    }
+}
+
+if (!(Test-Path $tarballPath))
+{
+    throw "Expected tarball not found: $tarballPath"
+}
+
+if (!$SkipPublish)
+{
+    & powershell -ExecutionPolicy Bypass -File ".\scripts\Publish-UpmPackage.ps1" -TarballPath $tarballPath
+    if ($LASTEXITCODE -ne 0)
+    {
+        throw "Publish-UpmPackage.ps1 failed with exit code $LASTEXITCODE"
+    }
+}
+
+Write-Host "Release flow completed for $Version"

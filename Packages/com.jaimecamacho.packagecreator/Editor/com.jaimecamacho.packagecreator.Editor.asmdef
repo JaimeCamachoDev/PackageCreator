@@ -2,7 +2,7 @@
     "name": "com.jaimecamacho.packagecreator.Editor",
     "rootNamespace": "",
     "references": [
-        "com.jaimecamacho.bubbles.Runtime"
+        "com.jaimecamacho.packagecreator.Runtime"
     ],
     "includePlatforms": [
         "Editor"

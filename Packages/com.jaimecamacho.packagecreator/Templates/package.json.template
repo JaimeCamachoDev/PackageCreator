@@ -1,13 +1,14 @@
 {
-  "author": "Jaime Camacho",
-  "displayName": "__PROJECT_NAME__",
+  "author": "__AUTHOR__",
+  "displayName": "__DISPLAY_NAME__",
   "keywords": [
-    "unity"
+    "unity",
+    "upm"
   ],
   "license": "MIT",
-  "name": "com.jaimecamacho.__projectid__",
-  "unity": "6000.0",
-  "unityRelease": "0f1",
-  "version": "1.0.0",
+  "name": "__PACKAGE_NAME__",
+  "unity": "__UNITY_VERSION__",
+  "unityRelease": "__UNITY_RELEASE__",
+  "version": "__VERSION__",
   "description": "__DESCRIPTION__"
 }
