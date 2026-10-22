@@ -1,13 +1,13 @@
 {
   "dependencies": {
-    "com.jaimecamacho.packagecreator": {
-      "version": "file:com.jaimecamacho.packagecreator",
+    "com.jaimecamachodev.packagecreator": {
+      "version": "file:com.jaimecamachodev.packagecreator",
       "depth": 0,
       "source": "embedded",
       "dependencies": {}
     },
-    "com.jaimecamacho.packagecreator-tool": {
-      "version": "file:com.jaimecamacho.packagecreator-tool",
+    "com.jaimecamachodev.packagecreator": {
+      "version": "file:com.jaimecamachodev.packagecreator",
       "depth": 0,
       "source": "embedded",
       "dependencies": {}

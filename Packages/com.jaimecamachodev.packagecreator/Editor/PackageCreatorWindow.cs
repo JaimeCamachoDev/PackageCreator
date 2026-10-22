@@ -7,14 +7,14 @@ using UnityEngine;
 
 public class PackageCreatorWindow : EditorWindow
 {
-    private const string CreatorPackageName = "com.jaimecamacho.packagecreator";
-    private const string TemplatesRoot = "Packages/com.jaimecamacho.packagecreator/Templates";
+    private const string CreatorPackageName = "com.jaimecamachodev.packagecreator";
+    private const string TemplatesRoot = "Packages/com.jaimecamachodev.packagecreator/Templates";
 
     private string packageId = string.Empty;
     private string displayName = string.Empty;
     private string description = "Unity package description";
     private string authorName = "Jaime Camacho";
-    private string companyPrefix = "com.jaimecamacho";
+    private string companyPrefix = "com.jaimecamachodev";
     private string version = "1.0.0";
     private string unityVersion = "6000.0";
     private string unityRelease = "0f1";

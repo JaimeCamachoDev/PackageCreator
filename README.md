@@ -13,7 +13,7 @@ Unity project and reusable UPM package for scaffolding Unity packages and automa
 
 This repository contains:
 
-- `Packages/com.jaimecamacho.packagecreator`
+- `Packages/com.jaimecamachodev.packagecreator`
 
 After importing it in another Unity project, open:
 

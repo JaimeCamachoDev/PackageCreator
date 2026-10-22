@@ -1,12 +1,8 @@
 {
-    "name": "com.jaimecamacho.packagecreator.Editor",
+    "name": "com.jaimecamachodev.packagecreator.Runtime",
     "rootNamespace": "",
-    "references": [
-        "com.jaimecamacho.packagecreator.Runtime"
-    ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "references": [],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

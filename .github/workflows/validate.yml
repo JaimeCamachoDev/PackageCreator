@@ -1,0 +1,61 @@
+name: Validate UPM Package
+
+on:
+  pull_request:
+    paths:
+      - "Packages/com.jaimecamachodev.packagecreator/**"
+      - ".github/workflows/publish.yml"
+      - "README.md"
+  push:
+    branches:
+      - main
+    paths:
+      - "Packages/com.jaimecamachodev.packagecreator/**"
+      - ".github/workflows/publish.yml"
+      - "README.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Validate package metadata
+        shell: pwsh
+        run: |
+          $packagePath = "Packages/com.jaimecamachodev.packagecreator"
+          $packageJsonPath = Join-Path $packagePath "package.json"
+          if (!(Test-Path $packageJsonPath)) {
+            throw "Missing package.json at $packageJsonPath"
+          }
+
+          $package = Get-Content -Raw -Path $packageJsonPath | ConvertFrom-Json
+
+          if ([string]::IsNullOrWhiteSpace($package.name)) {
+            throw "package.json is missing 'name'."
+          }
+
+          if ($package.name -notmatch '^com\.[a-z0-9\-]+(\.[a-z0-9\-]+)+$') {
+            throw "Package name '$($package.name)' is not a valid Unity reverse-domain package name."
+          }
+
+          if ([string]::IsNullOrWhiteSpace($package.version)) {
+            throw "package.json is missing 'version'."
+          }
+
+          if ($package.version -notmatch '^\d+\.\d+\.\d+(-[0-9A-Za-z\.-]+)?$') {
+            throw "Package version '$($package.version)' is not valid semver."
+          }
+
+          Write-Host "Package metadata validation passed for $($package.name) $($package.version)"

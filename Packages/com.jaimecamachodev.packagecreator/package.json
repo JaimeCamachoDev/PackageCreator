@@ -1,0 +1,29 @@
+{
+  "name": "com.jaimecamachodev.packagecreator",
+  "version": "1.1.0",
+  "displayName": "Package Creator",
+  "description": "Genera la estructura de un paquete UPM (package.json, asmdefs, documentación) y los scripts de release y firma.",
+  "unity": "6000.0",
+  "unityRelease": "0f1",
+  "license": "MIT",
+  "author": {
+    "name": "JaimeCamachoDev",
+    "url": "https://github.com/JaimeCamachoDev",
+    "email": "jaime.camacho.dev@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JaimeCamachoDev/PackageCreator.git"
+  },
+  "documentationUrl": "https://github.com/JaimeCamachoDev/PackageCreator#readme",
+  "changelogUrl": "https://github.com/JaimeCamachoDev/PackageCreator/blob/main/Packages/com.jaimecamachodev.packagecreator/CHANGELOG.md",
+  "licensesUrl": "https://github.com/JaimeCamachoDev/PackageCreator/blob/main/LICENSE",
+  "keywords": [
+    "unity",
+    "editor",
+    "upm",
+    "package",
+    "scaffold",
+    "release"
+  ]
+}

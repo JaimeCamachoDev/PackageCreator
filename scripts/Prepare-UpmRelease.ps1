@@ -2,7 +2,7 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$Version,
 
-    [string]$PackagePath = "Packages/com.jaimecamacho.packagecreator-tool",
+    [string]$PackagePath = "Packages/com.jaimecamachodev.packagecreator",
     [switch]$CreateChangelogEntry,
     [string[]]$ChangelogNotes
 )

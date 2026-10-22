@@ -3,7 +3,7 @@ param(
     [string]$UnityPath,
 
     [string]$ProjectPath = ".",
-    [string]$PackagePath = "Packages/com.jaimecamacho.packagecreator-tool",
+    [string]$PackagePath = "Packages/com.jaimecamachodev.packagecreator",
     [string]$OutputDirectory = "ReleaseArtifacts",
     [string]$CloudOrganization = $env:UNITY_CLOUD_ORGANIZATION,
     [string]$Username = $env:UNITY_USERNAME,

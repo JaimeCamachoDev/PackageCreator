@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class PackageReleaseManagerWindow : EditorWindow
 {
-    private const string CreatorPackageName = "com.jaimecamacho.packagecreator";
+    private const string CreatorPackageName = "com.jaimecamachodev.packagecreator";
     private const string UnityPathPrefKey = "JaimeCamachoDev.PackageCreator.UnityPath";
     private const string OutputDirectoryPrefKey = "JaimeCamachoDev.PackageCreator.OutputDirectory";
 
