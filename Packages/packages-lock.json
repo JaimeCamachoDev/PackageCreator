@@ -6,12 +6,6 @@
       "source": "embedded",
       "dependencies": {}
     },
-    "com.jaimecamachodev.packagecreator": {
-      "version": "file:com.jaimecamachodev.packagecreator",
-      "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
-    },
     "com.unity.burst": {
       "version": "1.8.28",
       "depth": 2,
