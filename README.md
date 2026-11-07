@@ -2,6 +2,10 @@
 
 Unity project and reusable UPM package for scaffolding Unity packages and automating the release flow.
 
+## Preview
+
+![Package Creator window (Tools → JaimeCamachoDev → Package Creator)](https://raw.githubusercontent.com/JaimeCamachoDev/PackageCreator/main/.github/preview.png)
+
 ## What it does
 
 - creates a package under `Packages/<reverse-domain-name>`
